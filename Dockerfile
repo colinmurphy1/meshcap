@@ -1,5 +1,5 @@
 # Use an official Python image as a base
-FROM python:3.12-slim
+FROM python:3.10-slim
 
 # Install necessary dependencies
 RUN apt-get update && apt-get install -y \
