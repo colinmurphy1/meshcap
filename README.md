@@ -1,0 +1,1 @@
+A way of capturing the streenshot of the current meshmap and save to an image

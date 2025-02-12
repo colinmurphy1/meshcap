@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  selenium_screenshot:
+    build: .
+    container_name: selenium_screenshot
+    volumes:
+      - ./screenshots:/app/screenshots  # Save screenshots outside the container
+    environment:
+      - DISPLAY=:99
+    restart: unless-stopped
