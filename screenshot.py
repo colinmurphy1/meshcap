@@ -24,8 +24,8 @@ driver.get("https://meshmap.iowamesh.net/?lat=41.9953615365105&lng=267.232835939
 
 # Try to close the pop-up if it exists
 try:
-    # Find the SVG element using its CSS class with CSS Selector
-    close_button = driver.find_element(By.CSS_SELECTOR, "svg.w-6.h-6")
+    # Find the SVG element using its XPath and click it
+    close_button = driver.find_element(By.XPATH, "//svg[@class='w-6 h-6']/path[@d='M0 0h24v24H0z']")
     close_button.click()
 except NoSuchElementException:
     print("Pop-up not found")
