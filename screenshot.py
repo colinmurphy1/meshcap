@@ -7,7 +7,6 @@ from datetime import datetime
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
 
 # Set up Chrome options for headless mode
 chrome_options = Options()
@@ -24,14 +23,13 @@ driver.set_window_size(2560, 1440)
 # Open the webpage
 driver.get("https://meshmap.iowamesh.net/?lat=41.9953615365105&lng=267.2328359397183&zoom=9")
 
-# Wait for the element to be present and click it using XPath
+# Wait for the element to be present and click it using a more precise XPath
 try:
     close_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//*[@class='h-7'][1]/*[name()='path'][3]"))
+        EC.element_to_be_clickable((By.XPATH, "//*[local-name()='svg']/*[local-name()='g' and @class='h-7']/*[local-name()='path' and position()=3]"))
     )
-    # Use ActionChains to move to the element and click it
-    actions = ActionChains(driver)
-    actions.move_to_element(close_button).click().perform()
+    close_button.click()
+    print("Close button clicked successfully.")
 except Exception as e:
     print("Close button not found or could not be clicked:", e)
 
