@@ -1,8 +1,10 @@
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.common.exceptions import NoSuchElementException
+from webdriver_manager.chrome import ChromeDriverManager
 from datetime import datetime
 
 # Set up Chrome options for headless mode
@@ -14,11 +16,19 @@ chrome_options.add_argument("--disable-dev-shm-usage")
 # Initialize the Chrome driver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
-# Set the desired window size
-driver.set_window_size(1920, 1080)
+# Set the desired window size for 2K resolution
+driver.set_window_size(2560, 1440)
 
 # Open the webpage
 driver.get("https://meshmap.iowamesh.net/?lat=41.9953615365105&lng=267.2328359397183&zoom=9")
+
+# Try to close the pop-up if it exists
+try:
+    # Find the SVG element using its CSS class with CSS Selector
+    close_button = driver.find_element(By.CSS_SELECTOR, "svg.w-6.h-6")
+    close_button.click()
+except NoSuchElementException:
+    print("Pop-up not found")
 
 # Create the screenshots directory if it doesn't exist
 screenshots_dir = "screenshots"
