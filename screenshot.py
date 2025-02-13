@@ -26,17 +26,12 @@ driver.get("https://meshmap.iowamesh.net/?lat=41.9953615365105&lng=267.232835939
 # Wait for the page to load completely
 time.sleep(5)  # Adjust the sleep time if necessary
 
-# Debugging step to list all potential close button elements
+# Try to close the pop-up if it exists
 try:
-    potential_close_buttons = driver.find_elements(By.CSS_SELECTOR, "div.absolute.top-0.right-0 a.rounded-full div.bg-gray-100.hover:bg-gray-200.p-2.rounded-full")
-    print(f"Found {len(potential_close_buttons)} potential close buttons")
-    for index, button in enumerate(potential_close_buttons):
-        print(f"Button {index}: {button.get_attribute('outerHTML')}")
-        try:
-            button.click()
-            print(f"Clicked button {index}")
-        except Exception as e:
-            print(f"Could not click button {index}: {e}")
+    # Find the div element containing the close button using its class and click it
+    close_button = driver.find_element(By.XPATH, "//div[@class='absolute top-0 right-0']//a")
+    close_button.click()
+    print("Pop-up closed")
 except NoSuchElementException:
     print("Pop-up not found")
 
