@@ -14,6 +14,9 @@ chrome_options.add_argument("--disable-dev-shm-usage")
 # Initialize the Chrome driver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
+# Set the desired window size
+driver.set_window_size(1920, 1080)
+
 # Open the webpage
 driver.get("https://meshmap.iowamesh.net/?lat=41.9953615365105&lng=267.2328359397183&zoom=9")
 
