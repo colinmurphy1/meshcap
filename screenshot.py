@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
+from selenium.common.exceptions import NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 from datetime import datetime
 import time
@@ -28,11 +28,11 @@ time.sleep(5)  # Adjust the sleep time if necessary
 
 # Try to close the pop-up if it exists
 try:
-    pop_up = driver.find_element(By.CSS_SELECTOR, "div.bg-gray-100.hover:bg-gray-200.p-2.rounded-full")
-    anchor_tag = pop_up.find_element(By.XPATH, "..")  # Find the parent <a> tag
-    anchor_tag.click()
-except (NoSuchElementException, ElementClickInterceptedException) as e:
-    print(f"Pop-up not found or could not be clicked: {e}")
+    # Find the anchor element within the specified div structure
+    close_button = driver.find_element(By.XPATH, "//div[@class='absolute top-0 right-0']//a[@class='rounded-full']")
+    close_button.click()
+except NoSuchElementException:
+    print("Pop-up not found")
 
 # Create the screenshots directory if it doesn't exist
 screenshots_dir = "screenshots"
