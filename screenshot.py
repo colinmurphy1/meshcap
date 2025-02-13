@@ -3,9 +3,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
 from webdriver_manager.chrome import ChromeDriverManager
 from datetime import datetime
+import time
 
 # Set up Chrome options for headless mode
 chrome_options = Options()
@@ -22,13 +23,16 @@ driver.set_window_size(2560, 1440)
 # Open the webpage
 driver.get("https://meshmap.iowamesh.net/?lat=41.9953615365105&lng=267.2328359397183&zoom=9")
 
+# Wait for the page to load completely
+time.sleep(5)  # Adjust the sleep time if necessary
+
 # Try to close the pop-up if it exists
 try:
-    # Find the anchor element using its class and click it
-    close_button = driver.find_element(By.CSS_SELECTOR, "a.rounded-full")
-    close_button.click()
-except NoSuchElementException:
-    print("Pop-up not found")
+    pop_up = driver.find_element(By.CSS_SELECTOR, "div.bg-gray-100.hover:bg-gray-200.p-2.rounded-full")
+    anchor_tag = pop_up.find_element(By.XPATH, "..")  # Find the parent <a> tag
+    anchor_tag.click()
+except (NoSuchElementException, ElementClickInterceptedException) as e:
+    print(f"Pop-up not found or could not be clicked: {e}")
 
 # Create the screenshots directory if it doesn't exist
 screenshots_dir = "screenshots"
