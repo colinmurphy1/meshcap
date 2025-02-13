@@ -1,28 +1,39 @@
-# Use an official Python image as a base
 FROM python:3.10-slim
 
-# Install necessary dependencies
-RUN apt-get update && apt-get install -y \
-    wget \
-    unzip \
-    curl \
-    chromium \
-    chromium-driver && \
+# Install gnupg and other necessary packages
+RUN apt-get update && apt-get install -y gnupg2 wget curl unzip && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Set environment variables
-ENV CHROMIUM_PATH=/usr/bin/chromium
-ENV CHROMEDRIVER_PATH=/usr/bin/chromium-driver
+# Install Chrome
+#RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+#    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
+#    apt-get update && \
+#    apt-get install -y google-chrome-stable
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+RUN apt-get update
+RUN apt --fix-broken install
+RUN apt-get install google-chrome-stable -y
 
-# Set working directory
+
+# Download and install ChromeDriver
+#RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
+#    #wget -q -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \
+#    wget -q -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/124.0.6367.60/chromedriver_linux64.zip && \
+#    unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/ && \
+#    rm /tmp/chromedriver.zip
+
+# Install Selenium
+RUN pip install selenium webdriver_manager
+
+# Install Selenium
+RUN pip install selenium
+
+# Copy your Python script into the container
+COPY screenshot.py /app/screenshot.py
+
 WORKDIR /app
 
-# Copy requirements and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy script into container
-COPY screenshot.py .
-
-# Command to run the script
-CMD ["python", "screenshot.py"]
+# Run your script
+CMD ["python3", "screenshot.py"]
