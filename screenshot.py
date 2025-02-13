@@ -18,7 +18,7 @@ chrome_options.add_argument("--disable-dev-shm-usage")
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
 # Set the desired window size for 2K resolution
-driver.set_window_size(2560, 1440)
+driver.set_window_size(1920, 1080)
 
 # Open the webpage
 driver.get("https://meshmap.iowamesh.net/?lat=41.9953615365105&lng=267.2328359397183&zoom=9")
