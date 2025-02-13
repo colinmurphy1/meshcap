@@ -1,40 +1,33 @@
-import selenium
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-import time
-from datetime import datetime
 import os
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+from datetime import datetime
 
-# Set up Chrome options
+# Set up Chrome options for headless mode
 chrome_options = Options()
-chrome_options.add_argument("--headless")  # Run in headless mode
-chrome_options.add_argument("--no-sandbox")  # Required for Docker
-chrome_options.add_argument("--disable-dev-shm-usage")  # Helps prevent crashes
-chrome_options.add_argument("--window-size=1920x1080")  # Set window size
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
 
-# Path to ChromeDriver inside the container
-chrome_driver_path = "/usr/bin/chromium-driver"
+# Initialize the Chrome driver
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
-# Initialize WebDriver
-service = Service(chrome_driver_path)
-driver = webdriver.Chrome(service=service, options=chrome_options)
+# Open the webpage
+driver.get("https://meshmap.iowamesh.net/?lat=41.9953615365105&lng=267.2328359397183&zoom=9")
 
-# URL to open
-url = "https://meshmap.iowamesh.net/?lat=42.03193413223133&lng=266.5022277832032&zoom=10"
-driver.get(url)
+# Create the screenshots directory if it doesn't exist
+screenshots_dir = "screenshots"
+if not os.path.exists(screenshots_dir):
+    os.makedirs(screenshots_dir)
 
-# Generate timestamped filename
+# Generate the filename with date and time stamp
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-screenshot_filename = f"screenshots/screenshot_{timestamp}.png"
+filename = os.path.join(screenshots_dir, f"screenshot_{timestamp}.png")
 
-# Ensure screenshots directory exists
-os.makedirs("screenshots", exist_ok=True)
-
-# Save screenshot
-driver.save_screenshot(screenshot_filename)
-
-print(f"Screenshot saved: {screenshot_filename}")
+# Take a screenshot and save it to the output file
+driver.save_screenshot(filename)
 
 # Close the browser
 driver.quit()
