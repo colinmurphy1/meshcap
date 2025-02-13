@@ -23,15 +23,17 @@ driver.set_window_size(2560, 1440)
 # Open the webpage
 driver.get("https://meshmap.iowamesh.net/?lat=41.9953615365105&lng=267.2328359397183&zoom=9")
 
-# Wait for the element to be present and print its position
+# Wait for the element to be present
 try:
     close_button = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, ".h-7:nth-child(1) path:nth-child(3)"))
     )
-    # Print the element's location
-    print("Close button location:", close_button.location)
-    # Click the close button
-    close_button.click()
+    # Get the position of the close button
+    location = close_button.location
+    print("Close button location:", location)
+    
+    # Use JavaScript to click the element at the specified location
+    driver.execute_script("arguments[0].click();", close_button)
 except Exception as e:
     print("Close button not found:", e)
 
