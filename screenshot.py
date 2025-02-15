@@ -20,6 +20,15 @@ driver.set_window_size(2560, 1440)
 # Open the webpage
 driver.get("https://meshmap.iowamesh.net/?lat=42.059512297864146&lng=266.6024780273438&zoom=10")
 
+# Hide all elements in the page outside of the meshmap
+js = """
+var elems = ['div.border-gray-300', 'div.leaflet-bottom:nth-child(3)', 'div.leaflet-top:nth-child(2)', 'div.leaflet-top:nth-child(1)', '.leaflet-control-attribution'];
+elems.forEach((e) => {
+  document.querySelector(e).remove();
+});
+"""
+driver.execute_script(js)
+
 # Create the screenshots directory if it doesn't exist
 screenshots_dir = "screenshots"
 if not os.path.exists(screenshots_dir):
